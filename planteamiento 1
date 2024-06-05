@@ -1,0 +1,102 @@
+package com.mycompany.proyectoestructura1v2;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+/**
+ * Clase para buscar una palabra en una matriz de caracteres utilizando el algoritmo DFS (Depth-First Search) y BFS (Breadth-First Search).
+ *
+ * @author mainp
+ */
+public class WordSearcher {
+
+    private static final boolean[][] visited = new boolean[4][4]; // Matriz para marcar celdas visitadas
+    private static final int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // Direcciones de búsqueda
+
+    /**
+     * Método para buscar una palabra en la matriz utilizando DFS.
+     *
+     * @param matrix Matriz de caracteres.
+     * @param word Palabra a buscar.
+     * @param row Fila inicial de la búsqueda.
+     * @param col Columna inicial de la búsqueda.
+     * @return true si la palabra se encuentra, false en caso contrario.
+     */
+    public static boolean findWordDFS(char[][] matrix, String word, int row, int col) {
+        if (word.isEmpty()) {
+            return true; // Se encontró la palabra completa
+        }
+
+        // Marcar la celda actual como visitada
+        visited[row][col] = true;
+
+        // Comprobar si la letra actual coincide con la primera letra de la palabra
+        if (matrix[row][col] != word.charAt(0)) {
+            visited[row][col] = false; // Desmarcar la celda si no coincide
+            return false;
+        }
+
+        // Recorrer las direcciones adyacentes
+        for (int[] dir : directions) {
+            int newRow = row + dir[0];
+            int newCol = col + dir[1];
+
+            // Verificar si la nueva celda está dentro de la matriz y no ha sido visitada
+            if (isValidCell(newRow, newCol) && !visited[newRow][newCol]) {
+                // Buscar la palabra restante en la nueva celda
+                if (findWordDFS(matrix, word.substring(1), newRow, newCol)) {
+                    return true; // Se encontró la palabra
+                }
+            }
+        }
+
+        // Desmarcar la celda actual si no se encontró la palabra completa
+        visited[row][col] = false;
+        return false;
+    }
+
+    /**
+     * Método para buscar una palabra en la matriz utilizando BFS.
+     *
+     * @param matrix Matriz de caracteres.
+     * @param word Palabra a buscar.
+     * @param row Fila inicial de la búsqueda.
+     * @param col Columna inicial de la búsqueda.
+     * @return true si la palabra se encuentra, false en caso contrario.
+     */
+    public static boolean buscarPalabraPorBFS(char[][] matrix, String word, int row, int col) {
+        if (word.isEmpty()) {
+            return true; // Se encontró la palabra completa
+        }
+
+        // Marcar la celda actual como visitada
+        visited[row][col] = true;
+
+        // Comprobar si la letra actual coincide con la primera letra de la palabra
+        if (matrix[row][col] != word.charAt(0)) {
+            visited[row][col] = false; // Desmarcar la celda si no coincide
+            return false;
+        }
+
+        // Crear una cola para almacenar las celdas a explorar
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{row, col});
+
+        while (!queue.isEmpty()) {
+            // Sacar la siguiente celda de la cola
+            int[] currentCell = queue.poll();
+            int currentRow = currentCell[0];
+            int currentCol = currentCell[1];
+
+            // Recorrer las direcciones adyacentes
+            for (int[] dir : directions) {
+                int newRow = currentRow + dir[0];
+                int newCol = currentCol + dir[1];
+
+                // Verificar si la nueva celda es válida y no ha sido visitada
+                if (isValidCell(newRow, newCol) && !visited[newRow][newCol]) {
+                    // Marcar la nueva celda como visitada
+                    visited[newRow][newCol] = true;
+
+                    // Comprobar si la letra en la nueva celda coincide con la siguiente letra de la palabra
+                    if (matrix[newRow]

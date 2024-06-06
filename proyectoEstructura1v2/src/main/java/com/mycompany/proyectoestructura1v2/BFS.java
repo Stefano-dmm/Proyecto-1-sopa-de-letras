@@ -10,6 +10,8 @@ import java.util.*;
  * @author mainp
  */
 
+ //falta guardado de orden para visitar letras para imprimirlo
+
 public class BFS {
     private char[][] board;
     private String targetWord;
@@ -27,12 +29,13 @@ public class BFS {
             for (int j = 0; j < cols; j++) {
                 if (board[i][j] == targetWord.charAt(0)) {
                     Queue<Pair> queue = new LinkedList<>();
-                    queue.add(new Pair(i, j, String.valueOf(board[i][j])));
+                    queue.add(new Pair(i, j, String.valueOf(board[i][j]), "(" + i + "," + j + "):" + board[i][j]));
 
                     while (!queue.isEmpty()) {
                         Pair current = queue.poll();
 
                         if (current.str.equals(targetWord)) {
+                            System.out.println("Path: " + current.path); // Print the path if the target word is found
                             return true;
                         }
 
@@ -43,7 +46,8 @@ public class BFS {
                             if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
                                 String newStr = current.str + board[newRow][newCol];
                                 if (targetWord.startsWith(newStr)) {
-                                    queue.add(new Pair(newRow, newCol, newStr));
+                                    String newPath = current.path + " -> (" + newRow + "," + newCol + "):" + board[newRow][newCol];
+                                    queue.add(new Pair(newRow, newCol, newStr, newPath));
                                 }
                             }
                         }
@@ -63,11 +67,13 @@ public class BFS {
         int row;
         int col;
         String str;
+        String path;
 
-        Pair(int row, int col, String str) {
+        Pair(int row, int col, String str, String path) {
             this.row = row;
             this.col = col;
             this.str = str;
+            this.path = path;
         }
     }
 }

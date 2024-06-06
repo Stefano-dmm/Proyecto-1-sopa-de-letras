@@ -6,6 +6,8 @@ package com.mycompany.proyectoestructura1v2;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+import java.io.*;
+
 /**
  *
  * @author mainp
@@ -21,7 +23,7 @@ public class FileLoader {
             File selectedFile = fileChooser.getSelectedFile();
             Scanner s = new Scanner(selectedFile);
             while (s.hasNext()){
-                dictionary.add(s.next());
+                dictionary.add(s.next().toUpperCase()); // Convierte todas las palabras a mayúsculas
             }
             s.close();
         } else {

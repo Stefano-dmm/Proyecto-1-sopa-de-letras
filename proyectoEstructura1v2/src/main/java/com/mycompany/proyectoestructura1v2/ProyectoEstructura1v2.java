@@ -16,9 +16,9 @@ import java.util.*;
 public class ProyectoEstructura1v2 {
     public static void main(String[] args) {
         char[][] board = {
-            {'A', 'B', 'C', 'E'},
-            {'S', 'F', 'C', 'S'},
-            {'A', 'D', 'E', 'E'}
+            {'H', 'B', 'C', 'E'},
+            {'S', 'O', 'L', 'S'},
+            {'A', 'D', 'E', 'A'}
         };
         FileLoader fileLoader = null;
         try {

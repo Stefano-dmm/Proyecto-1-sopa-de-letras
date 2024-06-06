@@ -46,19 +46,27 @@ public class DFS {
         }
 
         str += board[i][j];
+        System.out.println("Visiting: " + str); // Imprime la cadena actual
+
         if (!isPrefix(str)) {
+            System.out.println(str + " is not a prefix"); // Imprime si la cadena no es un prefijo
             return;
         }
 
         if (dictionary.contains(str)) {
             result.add(str);
+            System.out.println(str + " is a word"); // Imprime si la cadena es una palabra
         }
 
         visited[i][j] = true;
-        dfs(i - 1, j, str);
-        dfs(i + 1, j, str);
-        dfs(i, j - 1, str);
-        dfs(i, j + 1, str);
+        dfs(i - 1, j, str); // Arriba
+        dfs(i + 1, j, str); // Abajo
+        dfs(i, j - 1, str); // Izquierda
+        dfs(i, j + 1, str); // Derecha
+        dfs(i - 1, j - 1, str); // Diagonal superior izquierda
+        dfs(i - 1, j + 1, str); // Diagonal superior derecha
+        dfs(i + 1, j - 1, str); // Diagonal inferior izquierda
+        dfs(i + 1, j + 1, str); // Diagonal inferior derecha
         visited[i][j] = false;
     }
 

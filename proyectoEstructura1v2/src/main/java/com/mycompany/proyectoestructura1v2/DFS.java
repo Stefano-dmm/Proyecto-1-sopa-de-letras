@@ -14,70 +14,83 @@ import java.io.*;
 
 //falta que cree la fuerza de semejansa entre palabras encontradas (verificar esto)
 
+
 public class DFS {
     private char[][] board;
-    private boolean[][] visited;
-    private Set<String> result = new HashSet<>();
-    private Set<String> dictionary;
+    private String targetWord;
+    private Map<String, List<String>> adjacencyList;
 
-    public DFS(char[][] board, Set<String> dictionary) {
+    public DFS(char[][] board, String targetWord) {
         this.board = board;
-        this.dictionary = dictionary;
-        this.visited = new boolean[board.length][board[0].length];
+        this.targetWord = targetWord.toUpperCase(); // Convert the target word to uppercase
+        this.adjacencyList = new HashMap<>(); // Create a new adjacency list
     }
 
-    public void findAndPrintWords() {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                dfs(i, j, "");
+    public boolean findWord() {
+        int rows = board.length;
+        int cols = board[0].length;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (board[i][j] == targetWord.charAt(0)) {
+                    boolean[][] visited = new boolean[rows][cols];
+                    if (dfs(i, j, 0, visited)) {
+                        return true;
+                    }
+                }
             }
         }
-        if (result.isEmpty()) {
-            System.out.println("No se encontraron palabras");
-        } else {
-            System.out.println("Palabras encontradas: " + result);
-        }
-    }
 
-    private void dfs(int i, int j, String str) {
-        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length) {
-            return;
-        }
-        if (visited[i][j]) {
-            return;
-        }
-
-        str += board[i][j];
-        System.out.println("Visiting: " + str); // Imprime la cadena actual
-
-        if (!isPrefix(str)) {
-            System.out.println(str + " is not a prefix"); // Imprime si la cadena no es un prefijo
-            return;
-        }
-
-        if (dictionary.contains(str)) {
-            result.add(str);
-            System.out.println(str + " is a word"); // Imprime si la cadena es una palabra
-        }
-
-        visited[i][j] = true;
-        dfs(i - 1, j, str); // Arriba
-        dfs(i + 1, j, str); // Abajo
-        dfs(i, j - 1, str); // Izquierda
-        dfs(i, j + 1, str); // Derecha
-        dfs(i - 1, j - 1, str); // Diagonal superior izquierda
-        dfs(i - 1, j + 1, str); // Diagonal superior derecha
-        dfs(i + 1, j - 1, str); // Diagonal inferior izquierda
-        dfs(i + 1, j + 1, str); // Diagonal inferior derecha
-        visited[i][j] = false;
-    }
-
-    private boolean isPrefix(String str) {
-        for (String word : dictionary) {
-            if (word.startsWith(str)) {
-                return true;
-            }
-        }
         return false;
+    }
+
+    private boolean dfs(int row, int col, int index, boolean[][] visited) {
+        if (index == targetWord.length()) {
+            return true;
+        }
+
+        if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
+            return false;
+        }
+
+        if (visited[row][col]) {
+            return false;
+        }
+
+        if (board[row][col] != targetWord.charAt(index)) {
+            return false;
+        }
+
+        visited[row][col] = true;
+
+        String word = targetWord.substring(0, index + 1);
+        if (!adjacencyList.containsKey(word)) {
+            adjacencyList.put(word, new ArrayList<>());
+        }
+
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (int[] direction : directions) {
+            int newRow = row + direction[0];
+            int newCol = col + direction[1];
+
+            if (newRow >= 0 && newRow < board.length && newCol >= 0 && newCol < board[0].length) {
+                String neighbor = targetWord.substring(0, index + 2);
+                if (!adjacencyList.get(word).contains(neighbor)) {
+                    adjacencyList.get(word).add(neighbor);
+                }
+
+                if (dfs(newRow, newCol, index + 1, visited)) {
+                    return true;
+                }
+            }
+        }
+
+        visited[row][col] = false;
+
+        return false;
+    }
+
+    public Map<String, List<String>> getAdjacencyList() {
+        return adjacencyList;
     }
 }

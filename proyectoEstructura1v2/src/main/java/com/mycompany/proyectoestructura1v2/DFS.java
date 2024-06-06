@@ -12,6 +12,8 @@ import java.io.*;
  * @author mainp
  */
 
+//falta que cree la fuerza de semejansa entre palabras encontradas (verificar esto)
+
 public class DFS {
     private char[][] board;
     private boolean[][] visited;

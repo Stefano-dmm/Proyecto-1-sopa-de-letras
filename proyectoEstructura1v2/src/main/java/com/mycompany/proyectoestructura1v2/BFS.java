@@ -10,15 +10,17 @@ import java.util.*;
  * @author mainp
  */
 
- //falta guardado de orden para visitar letras para imprimirlo
+ //falta guardado de orden para visitar letras para imprimirlo para que se vea como grafo
 
 public class BFS {
     private char[][] board;
     private String targetWord;
+    private GraphWindow window;
 
     public BFS(char[][] board, String targetWord) {
         this.board = board;
         this.targetWord = targetWord.toUpperCase(); // Convert the target word to uppercase
+        this.window = new GraphWindow(); // Create a new GraphWindow
     }
 
     public boolean findWord() {
@@ -35,7 +37,7 @@ public class BFS {
                         Pair current = queue.poll();
 
                         if (current.str.equals(targetWord)) {
-                            System.out.println("Path: " + current.path); // Print the path if the target word is found
+                            window.showGraph("Path: " + current.path); // Show the path in the GraphWindow
                             return true;
                         }
 

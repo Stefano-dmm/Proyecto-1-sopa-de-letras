@@ -4,8 +4,9 @@
  */
 package com.mycompany.proyectoestructura1v2;
 
-import java.util.*;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  *
@@ -17,7 +18,7 @@ import java.io.*;
 public class DFS {
     private char[][] board;
     private boolean[][] visited;
-    private Set<String> result = new HashSet<>();
+    private Set<String> result = new LinkedHashSet<>();
     private Set<String> dictionary;
     private GraphWindow window;
 
@@ -28,7 +29,10 @@ public class DFS {
 
         try {
             FileLoader fileLoader = new FileLoader();
-            this.dictionary = new HashSet<>(fileLoader.dictionary);
+            this.dictionary = new LinkedHashSet<>();
+            for (String word : fileLoader.dictionary) {
+                this.dictionary.add(word.toUpperCase());
+            }
         } catch (FileNotFoundException e) {
             System.out.println("Archivo no encontrado");
         }
@@ -75,7 +79,7 @@ public class DFS {
         dfs(i - 1, j + 1, str); // Diagonal superior derecha
         dfs(i + 1, j - 1, str); // Diagonal inferior izquierda
         dfs(i + 1, j + 1, str); // Diagonal inferior derecha
-        visited[i][j] = false;
+        visited[i][j] = false; // Desmarca la celda como visitada
     }
 
     private boolean isPrefix(String str) {

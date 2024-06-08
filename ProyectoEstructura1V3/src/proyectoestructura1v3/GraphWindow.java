@@ -5,6 +5,8 @@
 package proyectoestructura1v3;
 import javax.swing.*;
 import java.awt.*;
+import org.graphstream.graph.*;
+import org.graphstream.graph.implementations.*;
 
 
 /**
@@ -32,4 +34,12 @@ public class GraphWindow extends JFrame {
         textArea.setText(graph);
         setVisible(true);
     }
+
+    public void GraphPrinter {
+        System.setProperty("org.graphstream.ui", "swing");
+        
+        SingleGraph graph = new SingleGraph("My Graph");
+
+        graph.display();
+    
 }

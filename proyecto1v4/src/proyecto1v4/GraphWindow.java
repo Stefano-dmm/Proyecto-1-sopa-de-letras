@@ -5,74 +5,60 @@
 package proyecto1v4;
 import javax.swing.*;
 import java.awt.*;
-//import org.jgrapht.*;
-//import org.jgrapht.graph.*;
-//import org.jgrapht.ext.*;
+import java.util.*;
 
 
 /**
  *
  * @author mainp
  */
-
-/**
- * Clase GraphWindow para mostrar una ventana con un grafo.
- */
 public class GraphWindow extends JFrame {
-    private JTextArea textArea;
+    private Map<String, Set<String>> adjacencyList;
 
-    /**
-     * Constructor para la clase GraphWindow.
-     */
     public GraphWindow() {
-        setTitle("Graph Traversal");
+        this.adjacencyList = new HashMap<>();
         setSize(500, 500);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-
-        textArea = new JTextArea();
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        add(scrollPane, BorderLayout.CENTER);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
-    /**
-     * Método para mostrar el grafo en la ventana.
-     *
-     * @param graph Cadena que representa el grafo.
-     */
-    public void showGraph(String graph) {
-        textArea.setText(graph);
-        setVisible(true);
+    public void addVertex(String vertex) {
+        adjacencyList.putIfAbsent(vertex, new HashSet<>());
     }
 
-    // Método para mostrar el grafo en la ventana.
-    // Este método está comentado porque falta el graficador de grafos.
-    // 
-    // public void showGraph(Grafo grafo) {
-    //     JFrame graphFrame = new JFrame("Graph Visualization");
-    //     graphFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    //     graphFrame.setSize(500, 500);
-    //
-    //     Graph<String, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
-    //
-    //     // Añadir vértices al grafo
-    //     for (String word : grafo.getWords()) {
-    //         g.addVertex(word);
-    //     }
-    //
-    //     // Añadir aristas al grafo
-    //     for (String[] edge : grafo.getEdges()) {
-    //         g.addEdge(edge[0], edge[1]);
-    //     }
-    //
-    //     // Crear visualización del grafo
-    //     JGraphXAdapter<String, DefaultEdge> graphAdapter = new JGraphXAdapter<>(g);
-    //     mxIGraphLayout layout = new mxCircleLayout(graphAdapter);
-    //     layout.execute(graphAdapter.getDefaultParent());
-    //
-    //     // Añadir visualización del grafo al frame
-    //     graphFrame.add(new mxGraphComponent(graphAdapter));
-    //     graphFrame.revalidate();
-    //     graphFrame.setVisible(true);
-    // }
+    public void addEdge(String vertex1, String vertex2) {
+        adjacencyList.get(vertex1).add(vertex2);
+        adjacencyList.get(vertex2).add(vertex1);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        Graphics2D g2d = (Graphics2D) g;
+        int radius = 20;
+        int padding = 50;
+        int vertexCount = adjacencyList.size();
+        double angleStep = 2 * Math.PI / vertexCount;
+
+        Map<String, Point> vertexLocations = new HashMap<>();
+        int i = 0;
+        for (String vertex : adjacencyList.keySet()) {
+            int x = (int) (Math.cos(i * angleStep) * (getWidth() / 2 - padding - radius) + getWidth() / 2);
+            int y = (int) (Math.sin(i * angleStep) * (getHeight() / 2 - padding - radius) + getHeight() / 2);
+            vertexLocations.put(vertex, new Point(x, y));
+            i++;
+        }
+
+        for (Map.Entry<String, Set<String>> entry : adjacencyList.entrySet()) {
+            for (String edge : entry.getValue()) {
+                Point p1 = vertexLocations.get(entry.getKey());
+                Point p2 = vertexLocations.get(edge);
+                g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+            }
+        }
+
+        for (Map.Entry<String, Point> entry : vertexLocations.entrySet()) {
+            g2d.fillOval(entry.getValue().x - radius / 2, entry.getValue().y - radius / 2, radius, radius);
+            g2d.drawString(entry.getKey(), entry.getValue().x - radius / 2, entry.getValue().y - radius / 2);
+        }
+    }
 }

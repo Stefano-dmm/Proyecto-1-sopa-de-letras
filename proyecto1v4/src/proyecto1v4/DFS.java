@@ -4,7 +4,6 @@
  */
 package proyecto1v4;
 import java.io.FileNotFoundException;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -74,7 +73,6 @@ public class DFS {
             result.add(str);
             window.addVertex(str);
             System.out.println(str + " es una palabra");
-            addEdges(str);
         }
 
         visited[i][j] = true;
@@ -97,27 +95,4 @@ public class DFS {
         }
         return false;
     }
-
-    private void addEdges(String word) {
-    for (String otherWord : result) {
-        if (!otherWord.equals(word) && shareCommonLetters(word, otherWord)) {
-            window.addEdge(word, otherWord);
-        }
-    }
-}
-
-private boolean shareCommonLetters(String word1, String word2) {
-    Set<Character> set1 = new HashSet<>();
-    for (char c : word1.toCharArray()) {
-        set1.add(c);
-    }
-
-    for (char c : word2.toCharArray()) {
-        if (set1.contains(c)) {
-            return true;
-        }
-    }
-
-    return false;
-}
 }
